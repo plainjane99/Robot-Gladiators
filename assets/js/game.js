@@ -23,7 +23,8 @@ var fight = function(enemyName) {
 
         // if player choses to skip
         if (promptFight === "skip" || promptFight === "SKIP") {
-        // confirm user wants to skip
+            
+            // confirm user wants to skip
             var confirmSkip = window.confirm("Are you sure you'd like to quit?");
 
             // if yes (true), leave fight
@@ -31,55 +32,61 @@ var fight = function(enemyName) {
                 window.alert(playerName + " has decided to skip the fight.  Goodbye!");
 
                 // subtract money from playerMoney for skipping
-                playerMoney = playerMoney - 10;
-                console.log("playerMoney", playerMoney);
-                break;
+                playerMoney = Math.max(0, playerMoney - 10);
             
                 // Log a resulting message to the console so we know that it worked.
                 console.log(
                     playerName + " now has " + playerMoney + " money left."
-                )
+                );
+
+                break;
             }
         }
 
-        enemyHealth = enemyHealth - playerAttack;
+        else {
+
+            var damage = randomNumber(playerAttack - 3, playerAttack);
+            
+            enemyHealth = Math.max(0, enemyHealth - playerAttack);
+            
+            // Log a resulting message to the console so we know that it worked.
+            console.log(
+                playerName + " attacked " + enemyName + ". " + enemyName + " now has " + enemyHealth + " health remaining."
+            );
         
-        // Log a resulting message to the console so we know that it worked.
-        console.log(
-            playerName + " attacked " + enemyName + ". " + enemyName + " now has " + enemyHealth + " health remaining."
-        );
-    
-        // check enemy's health
-        if (enemyHealth <= 0) {
-            window.alert(enemyName + " has died!");
+            // check enemy's health
+            if (enemyHealth <= 0) {
+                window.alert(enemyName + " has died!");
 
-            // award player money for winning
-            playerMoney = playerMoney + 20;
+                // award player money for winning
+                playerMoney = playerMoney + 20;
 
-            // leave while() loop since enemy is dead
-            break;
-        
-        } else {
-            window.alert(enemyName + " still has " + enemyHealth + " health left.");
-        }
+                // leave while() loop since enemy is dead
+                break;
+            
+            } else {
+                window.alert(enemyName + " still has " + enemyHealth + " health left.");
 
-        // remove player's health by subtracting the amount set in the enemyAttack variable
-        // Subtract the value of `enemyAttack` from the value of `playerHealth` and use that result to update the value in the `playerHealth` variable.
-        playerHealth = playerHealth - enemyAttack;
+                // remove player's health by subtracting the amount set in the enemyAttack variable
+                // Subtract the value of `enemyAttack` from the value of `playerHealth` and use that result to update the value in the `playerHealth` variable.
+                var damage = randomNumber(enemyAttack - 3, enemyAttack);
 
-        // Log a resulting message to the console so we know that it worked.
-        console.log(
-            enemyName + " attacked " + playerName + ". " + playerName + " now has " + playerHealth + " health remaining."
-        );
+                playerHealth = Math.max(0, playerHealth - damage);
 
-        // check player's health
-        if (playerHealth <= 0) {
-            window.alert(playerName + " has died!");
-            break;
+                // Log a resulting message to the console so we know that it worked.
+                console.log(
+                    enemyName + " attacked " + playerName + ". " + playerName + " now has " + playerHealth + " health remaining."
+                );       
 
-        } else {
-            window.alert(playerName + " still has " + playerHealth + " health left.");
-            break;
+                // check player's health
+                if (playerHealth <= 0) {
+                    window.alert(playerName + " has died!");
+                    break;
+
+                } else {
+                    window.alert(playerName + " still has " + playerHealth + " health left.");
+                }
+            }
         }
     }
 }
@@ -94,6 +101,8 @@ var startGame = function() {
     playerMoney = 10;
 
     for (var i = 0; i < enemyNames.length; i++) {
+
+        debugger;
     
         if (playerHealth > 0) {
             // let user know what round they are in
@@ -103,11 +112,8 @@ var startGame = function() {
             var pickedEnemyName = enemyNames[i];
     
             // reset enemy health before starting new fight
-            enemyHealth = 50;
-    
-            // use debugger to pause script from running and check what's going on
-            // debugger;
-    
+            enemyHealth = randomNumber(40,60);
+        
             // pass the pickedEnemyName variable's value into the fight function
             fight(pickedEnemyName);
 
@@ -207,6 +213,13 @@ var shop = function() {
             shop();
             break;
     }
+};
+
+// function to generate a random numeric value
+var randomNumber = function(min, max) {
+    var value = Math.floor(Math.random()* (max-min +1));
+
+    return value;
 };
 
 // start the game when the page loads
